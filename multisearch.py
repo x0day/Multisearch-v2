@@ -19,7 +19,11 @@ class search(object):
         self.contentPattern = searchdict['contentPattern']
         self.nextPattern = searchdict['nextPattern']
         self.timeout = searchdict['timeout']
-        self.proxies = searchdict['proxies']
+        try:
+            self.proxies = searchdict['proxies']
+        except:
+            self.proxies = None
+
         self.maxPages = searchdict['maxPages']
         self.headers = headers
         self.word = word
