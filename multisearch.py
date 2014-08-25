@@ -93,7 +93,7 @@ class search(object):
         else:
             self.searchWithPages()
         self.urls = list(set(self.urls))
-        self.handle(self.contents)
+        self.handle()
 
     def login(self):
         pass
@@ -152,8 +152,35 @@ class simplesearch(search):
     def __init__(self, word, pages, searchdict):
         super(simplesearch, self).__init__(word, pages, searchdict)
 
+class zoomeyesearch(search):
+
+    def __init__(self, word, pages, searchdict):
+        super(zoomeyesearch, self).__init__(word, pages, searchdict)
+
+    def login(self):
+        csrfcodeurl = "http://www.zoomeye.org/"
+        loginurl = "http://www.zoomeye.org/login"
+
+        resp = self.req.get(csrfcodeurl, headers=headers)
+
+        html = resp.content
+        csrfcode = re.findall("name='csrfmiddlewaretoken' value='([\s\S]+?)'", html)[0]
+
+        postdata = {
+            "csrfmiddlewaretoken" : csrfcode,
+            "username" : "xxxx",
+            "password":"xxxx",
+        }
+
+        self.req.post(loginurl, data=postdata, headers=headers)
+
 
 if __name__ == "__main__":
     s = simplesearch("site:x0day.me", None , googlesearchDict)
     s.search()
     print s.urls
+
+    z = zoomeyesearch("wordpress", None , zoomeyesearchDict)
+    z.search()
+    print z.urls
+    print len(z.urls)
